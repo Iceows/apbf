@@ -18,11 +18,6 @@ use config::*;
 
 /// Output normally returned to stdout for a decryption attempt.
 ///
-/// The tool will stop if anything else was returned.
-const STDOUT_NORMAL: &str = "Attempting to decrypt data partition via command line.\n";
-
-/// Partial output returned to stdout on successful decryption.
-const STDOUT_SUCCESS: &str = "Data successfully decrypted";
 
 /// Application entry point.
 fn main() {
@@ -136,21 +131,24 @@ fn try_phrase(phrase: &str) -> bool {
     // Build and invoke the decrypt command, collect results
     let out = Command::new("adb")
         .arg("shell")
-        .arg(format!("twrp decrypt '{}'", phrase))
+        .arg(format!("twrpfbe 0 {}", phrase))
         .output()
         .expect("failed to invoke decrypt command");
     let status = out.status;
     let stdout = String::from_utf8(out.stdout).expect("output is not in valid UTF-8 format");
     let stderr = String::from_utf8(out.stderr).expect("output is not in valid UTF-8 format");
 
-    // Check for success
-    if status.success() && stdout.contains(STDOUT_SUCCESS) && stderr == "" {
+    // Check for success - 
+    if status.success() 
+        && (stdout.contains("User 0 Decrypted Successfully!"))
+    {
+        println!("Found Password : {}", phrase);
         return true;
     }
 
     // Regular output, continue
     if status.success()
-        && (stdout == STDOUT_NORMAL || stdout.contains("Failed to decrypt"))
+        && (stdout.contains("Failed to decrypt"))
         && stderr == ""
     {
         return false;
