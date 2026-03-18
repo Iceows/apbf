@@ -8,7 +8,7 @@
 /// Any of:
 /// - `crate::Code::Pattern`
 /// - `crate::Code::Pin`
-pub const CODE_TYPE: crate::Code = crate::Code::Pattern;
+pub const CODE_TYPE: crate::Code = crate::Code::Pin;
 
 /// Pattern:
 /// The dots we should generate patterns on for brute forcing.
@@ -85,7 +85,7 @@ pub const PATTERN_DISTANCE_MAX: u16 = 1;
 ///
 /// This should be >=10000 because TWRP has a decrypt attempt timeout of about 10 seconds, any new
 /// attempts within that time frame fail with no warning.
-pub const ATTEMPT_DELAY: u64 = 10_500;
+pub const ATTEMPT_DELAY: u64 = 1;
 
 /// How far into the pattern list to skip before attempting to continue. This is 0-indexed.
 ///
